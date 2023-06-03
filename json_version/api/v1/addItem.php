@@ -10,7 +10,12 @@ $requestBody = json_decode(file_get_contents('php://input'), true);
 
 $numItem = (int)file_get_contents(FILE_PATH_COUNTER);
 
-header('Content-Type: application/json');
+// header("Access-Control-Allow-Origin: http://todo_simple_public");
+// header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+// header("Access-Control-Allow-Methods: POST");
+// header('Access-Control-Allow-Credentials: true');
+
+// header('Content-Type: application/json');
 
 if (!empty($requestBody['text'])) {
 
@@ -21,7 +26,6 @@ if (!empty($requestBody['text'])) {
 
     echo json_encode(['id' => $numItem]);
 } elseif(empty($requestBody['text'])) {
-    // http_response_code(204);
     echo json_encode(['ok' => 'No Content']);
 } else {
     echo json_encode(['error' => 'Bad Request']);

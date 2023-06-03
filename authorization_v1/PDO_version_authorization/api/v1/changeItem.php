@@ -19,7 +19,7 @@ header('Content-Type: application/json');
 if (isset($requestBody['id']) && isValidID($requestBody, $connectDB)) {
     $id = $requestBody['id'];
     $text = $requestBody['text'];
-    $checked = $requestBody['checked'];
+    $checked = (int)$requestBody['checked'];
 
     $itemsDB = $connectDB->prepare("UPDATE items SET text = ?, checked = ? WHERE id = ?");
     $itemsDB->execute([$text, $checked, $id]);

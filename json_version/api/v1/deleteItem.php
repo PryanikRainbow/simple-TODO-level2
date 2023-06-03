@@ -8,39 +8,37 @@ $items = json_decode(file_get_contents(FILE_PATH_ITEMS), true);
 
 $requestBody = json_decode(file_get_contents('php://input'), true);
 
-header('Content-Type: application/json');
+// header("Access-Control-Allow-Origin: http://todo_simple_public.local");
+// header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+// header("Access-Control-Allow-Methods: DELETE");
+// header('Access-Control-Allow-Credentials: true');
 
-if (isset($requestBody['id']) && isValidID($requestBody)) {
+// header('Content-Type: application/json');
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+if (isset($requestBody['id']) && isValidID($requestBody['id'], $items)) {
     $id = $requestBody['id'];
 
     $itemIndex = array_search($id, array_column($items['items'], 'id'));
 
+    //get values of array by key
     array_splice($items['items'], $itemIndex, 1);
-    for ($i = $itemIndex; $i < count($items['items']); $i++) {
-        $items['items'][$i]['id'] = $items['items'][$i]['id'] - 1;
-    }
 
     $numItem = (int)file_get_contents(FILE_PATH_COUNTER);
     file_put_contents(FILE_PATH_COUNTER, --$numItem);
     file_put_contents(FILE_PATH_ITEMS, json_encode($items));
 
     echo json_encode(['ok' => true]);
-} elseif (!isValidID($requestBody)) {
+} elseif (!isValidID($requestBody['id'], $items)) {
     echo json_encode(['error' => 'Not Found']);
 } else {
     echo json_encode(['error' => 'Bad Request']);
 }
 
-function isValidID($requestBody)
+function isValidID($id, $items)
 {
-    return (int)$requestBody['id'] <= (int)file_get_contents(FILE_PATH_COUNTER) && (int)$requestBody['id'] >= 0;
+    $listID = array_column($items['items'], 'id');
+    return in_array((int)$id, $listID, true);
 }
-
-// Очищення JSON-файлу
-// file_put_contents(FILE_PATH_ITEMS, json_encode(array('items' => [])));
-
-// // Скидання лічильника
-// file_put_contents(FILE_PATH_COUNTER, '0');
-
-// header('Content-Type: application/json');
-// echo json_encode(array('ok' => true));
