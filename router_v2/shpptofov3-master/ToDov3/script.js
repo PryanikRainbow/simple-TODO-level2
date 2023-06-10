@@ -39,8 +39,8 @@ Vue.component("task", {
 	`,
 });
 
-const url = "http://todo-server-v2.local/api/v2/router.php?action=";
-const site = "http://todo-public-v2.local/index.php";
+const url = "https://todo-server-v2.local/router.php?action=";
+const site = "https://todo-public-v2.local/index.php";
 let vue = new Vue({
   el: "#app",
   data: {

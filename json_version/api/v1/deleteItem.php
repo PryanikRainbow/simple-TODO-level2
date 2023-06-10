@@ -23,8 +23,11 @@ if (isset($requestBody['id']) && isValidID($requestBody['id'], $items)) {
 
     $itemIndex = array_search($id, array_column($items['items'], 'id'));
 
-    //get values of array by key
     array_splice($items['items'], $itemIndex, 1);
+    /* In the json version, I decided to update the indexes after the deleted element */
+    for ($i = $itemIndex; $i < count($items['items']); $i++) {
+        $items['items'][$i]['id'] = $items['items'][$i]['id'] - 1;
+    }
 
     $numItem = (int)file_get_contents(FILE_PATH_COUNTER);
     file_put_contents(FILE_PATH_COUNTER, --$numItem);

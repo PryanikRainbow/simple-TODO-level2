@@ -1,18 +1,21 @@
 <?php
 
+session_set_cookie_params([
+    'samesite' => 'None',
+    'secure' => true,
+]);
 session_start();
 
-header("Access-Control-Allow-Origin: http://todo-public-v2.local");
+header("Access-Control-Allow-Origin: https://todo-public-v2.local");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header("Access-Control-Allow-Methods: POST, PUT, GET, DELETE, OPTIONS");
 header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit(0);
 }
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
 
 require_once 'connect.php';
 $connectDB = getDBConnect();
@@ -74,10 +77,6 @@ function tryToLogIn($login, $pass, $connectDB)
         $_SESSION['login'] = $login;
         $_SESSION['userID'] = $userData['userID'];
 
-        // session_set_cookie_params([
-        //     'samesite' => 'None',
-        //     'secure' => true,
-        // ]);
         echo json_encode(['ok' => true]);
     } else {
         http_response_code(401);
@@ -140,7 +139,7 @@ function getItems($connectDB)
 function addItem($requestBody, $connectDB)
 {
     if (isset($requestBody['text']) && !empty($requestBody['text'])) {
-        $itemsBD = $connectDB->prepare("INSERT INTO items (userID, text, checked) VALUES (?, ?, 0)");
+        $itemsBD = $connectDB->prepare("INSERT INTO items (userID, text) VALUES (?, ?)");
         $itemsBD->execute([$_SESSION['userID'], $requestBody['text']]);
         echo json_encode(['id' => $connectDB->lastInsertId()]);
     } else {
@@ -154,7 +153,7 @@ function changeItem($requestBody, $connectDB)
     if (isset($requestBody['id']) && isset($requestBody['checked']) && isValidID($requestBody['id'], $connectDB)) {
         $id = $requestBody['id'];
         $text = $requestBody['text'];
-        $checked = $requestBody['checked'];
+        $checked = (int)$requestBody['checked'];
 
         $itemsDB = $connectDB->prepare("UPDATE items SET text = ?, checked = ? WHERE id = ?");
         $itemsDB->execute([$text, $checked, $id]);
@@ -192,6 +191,7 @@ function isValidID($id, $connectDB)
     $itemsDB->execute([$id]);
     $count = $itemsDB->rowCount();
     return ($count > 0);
+
 }
 
 function getRequestBody()

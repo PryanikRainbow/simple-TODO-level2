@@ -1,3 +1,3 @@
 <?php
 
-header("Location: http://todo-public-v2.local/LoginToDo/login.html");
+header("Location: https://todo-public-v2.local/LoginToDo/login.html");
