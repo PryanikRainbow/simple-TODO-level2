@@ -1,3 +1,6 @@
+/**
+ * some lines of code were replaced: false -> 0
+ */
 Vue.component("task", {
   props: ["data"],
   methods: {
@@ -46,13 +49,13 @@ let vue = new Vue({
   data: {
     new_task: {
       text: "",
-      editable: false,
-      checked: false,
+      editable: 0,
+      checked: 0,
     },
     items: [
       {
         inputedit: "",
-        checked: false,
+        checked: 0,
       },
     ],
   },
@@ -62,7 +65,7 @@ let vue = new Vue({
         .then((res) => res.json())
         .then((response) => {
           this.items = response.items.map((item) => {
-            item.editable = false;
+            item.editable = 0;
             return item;
           });
         });
@@ -134,7 +137,7 @@ let vue = new Vue({
       }
     },
     task_done(index, id) {
-      this.items[index].checked = this.items[index].checked === false;
+      this.items[index].checked = this.items[index].checked === 0;
       this.checked = this.items[index].checked;
       this.getPut(index, id);
     },
