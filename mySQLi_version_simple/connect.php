@@ -1,8 +1,8 @@
 <?php
 
 const SERVER_NAME = '127.0.0.1';
-const USER_NAME = 'root';
-const PASSWORD = '';
+const USER_NAME = 'anya';
+const PASSWORD = '12345678';
 const DB =  'TODO_simple_mysqli';
 
 function getDBConnect()

@@ -2,6 +2,7 @@
 
 include('connect.php');
 
+//$requestBody = json_decode('{"text":"Add1"}', true);
 $requestBody = json_decode(file_get_contents('input.json'), true);
 $connectDB = getDBConnect();
 
@@ -22,9 +23,9 @@ if (isset($requestBody['text']) && !empty($requestBody['text'])) {
     echo json_encode(['error' => 'Bad Request']);
 }
 
-function getRequestBody()
-{
-    return json_decode(file_get_contents('php://input'), true);
-}
+// function getRequestBody()
+// {
+//     return json_decode(file_get_contents('php://input'), true);
+// }
 
 closeConnect($connectDB);

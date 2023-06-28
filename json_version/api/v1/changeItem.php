@@ -9,7 +9,7 @@ $items = json_decode(readFileContent(FILE_PATH_ITEMS), true);
 $requestBody = json_decode(file_get_contents('php://input'), true);
 $requestBody['text'] =  trim($requestBody['text']);
 
-header("Access-Control-Allow-Origin: http://todo_simple_public.local");
+header("Access-Control-Allow-Origin: http://todo-public-json.local");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header("Access-Control-Allow-Methods: PUT");
 header('Access-Control-Allow-Credentials: true');
@@ -21,7 +21,7 @@ if (isset($requestBody['id'], $requestBody['text'], $requestBody['checked'])
     $id = $requestBody['id'];
 
     $itemIndex = array_search($id, array_column($items['items'], 'id'));
-    if ($itemIndex !== false) {
+    if ($itemIndex) {
         $items['items'][$itemIndex]['text'] = $requestBody['text'];
         $items['items'][$itemIndex]['checked'] = (bool) $requestBody['checked'];
 

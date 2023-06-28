@@ -1,6 +1,3 @@
-/**
- * some lines of code were replaced: false -> 0
- */
 Vue.component("task", {
   props: ["data"],
   methods: {
@@ -42,37 +39,39 @@ Vue.component("task", {
 	`,
 });
 
-const url = "https://todo-server-v2.local/router.php?action=";
-const site = "https://todo-public-v2.local/index.php";
+const url = "http://todo-server-json.local/";
+const site = "http://todo-public-json.local/LoginToDo/login.html";
 let vue = new Vue({
   el: "#app",
   data: {
     new_task: {
       text: "",
-      editable: 0,
-      checked: 0,
+      editable: false,
+      checked: false,
     },
     items: [
       {
         inputedit: "",
-        checked: 0,
+        checked: false,
       },
     ],
   },
   methods: {
     getItems: function () {
-      fetch(url + "getItems", { credentials: "include" })
+      fetch(url + "getItems.php", {
+        credentials: "include",
+      })
         .then((res) => res.json())
         .then((response) => {
           this.items = response.items.map((item) => {
-            item.editable = 0;
+            item.editable = false;
             return item;
           });
         });
     },
     getDelete: function (index) {
       let request = JSON.stringify({ id: index });
-      fetch(url + "deleteItem", {
+      fetch(url + "deleteItem.php", {
         method: "DELETE",
         body: request,
         credentials: "include",
@@ -91,7 +90,7 @@ let vue = new Vue({
     },
     getPost: function () {
       let request = JSON.stringify({ text: this.new_task.text });
-      fetch(url + "addItem", {
+      fetch(url + "addItem.php", {
         method: "POST",
         body: request,
         credentials: "include",
@@ -101,7 +100,7 @@ let vue = new Vue({
       })
         .then((res) => res.json())
         .then((response) => {
-          if (response.id >= 0) {
+          if (response.id) {
             this.getItems();
             this.new_task.text = "";
           } else {
@@ -115,7 +114,7 @@ let vue = new Vue({
         id: id,
         checked: this.items[index].checked,
       });
-      fetch(url + "changeItem", {
+      fetch(url + "changeItem.php", {
         method: "PUT",
         body: request,
         credentials: "include",
@@ -137,7 +136,7 @@ let vue = new Vue({
       }
     },
     task_done(index, id) {
-      this.items[index].checked = this.items[index].checked === 0;
+      this.items[index].checked = this.items[index].checked === false;
       this.checked = this.items[index].checked;
       this.getPut(index, id);
     },
@@ -157,7 +156,7 @@ let vue = new Vue({
       this.items[index].inputedit = "";
     },
     exit() {
-      fetch(url + "logout", {
+      fetch(url + "logout.php", {
         method: "POST",
         credentials: "include",
       })
